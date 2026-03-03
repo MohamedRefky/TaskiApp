@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:tasky/Core/Services/prefrances_maneger.dart';
-import 'package:tasky/Screens/home_screen.dart';
+import 'package:tasky/Features/home/home_screen.dart';
 import 'package:tasky/model/task_model.dart';
-import 'package:tasky/widgets/task_list_widget.dart';
+import 'package:tasky/Core/componant/task_list_widget.dart';
 
 class CompletedTasksScreen extends StatefulWidget {
   const CompletedTasksScreen({super.key});

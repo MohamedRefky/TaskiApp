@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tasky/Core/Services/prefrances_maneger.dart';
 import 'package:tasky/Core/Widgets/custom_svg_picture.dart';
 import 'package:tasky/Core/Widgets/custom_text_form_field.dart';
-import 'package:tasky/Screens/main_screen.dart';
+import 'package:tasky/Features/navigaton/main_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   WelcomeScreen({super.key});

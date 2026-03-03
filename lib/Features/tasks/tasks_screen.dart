@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tasky/Core/Services/prefrances_maneger.dart';
 import 'package:tasky/model/task_model.dart';
-import 'package:tasky/widgets/task_list_widget.dart';
+import 'package:tasky/Core/componant/task_list_widget.dart';
 
 class TasksScreen extends StatefulWidget {
   const TasksScreen({super.key});

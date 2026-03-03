@@ -4,11 +4,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tasky/Core/Services/prefrances_maneger.dart';
-import 'package:tasky/Screens/add_task_screen.dart';
+import 'package:tasky/Features/add_task/add_task_screen.dart';
 import 'package:tasky/model/task_model.dart';
-import 'package:tasky/widgets/achieved_tasks_widget.dart';
-import 'package:tasky/widgets/high_priority_tasks_widget.dart';
-import 'package:tasky/widgets/sliver_task_list_widget.dart';
+import 'package:tasky/Features/home/componant/achieved_tasks_widget.dart';
+import 'package:tasky/Features/home/componant/high_priority_tasks_widget.dart';
+import 'package:tasky/Features/home/componant/sliver_task_list_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

@@ -6,9 +6,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:tasky/Core/Services/prefrances_maneger.dart';
 import 'package:tasky/Core/Theme/themes_controller.dart';
 import 'package:tasky/Core/Widgets/custom_svg_picture.dart';
-import 'package:tasky/Screens/main_screen.dart';
-import 'package:tasky/Screens/user_details_screen.dart';
-import 'package:tasky/Screens/welcome_screen.dart';
+import 'package:tasky/Features/navigaton/main_screen.dart';
+import 'package:tasky/Features/profile/user_details_screen.dart';
+import 'package:tasky/Features/welcome/welcome_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
