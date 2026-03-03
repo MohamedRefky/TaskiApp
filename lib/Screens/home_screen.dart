@@ -138,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         SizedBox(height: 16),
                         Text(
-                          'Yuhuu ,Your work Is Done',
+                          'Yuhuu ,Your work Is Done ',
                           style: TextTheme.of(context).displayLarge,
                         ),
                         Row(
