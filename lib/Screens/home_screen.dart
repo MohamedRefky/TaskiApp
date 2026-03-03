@@ -175,7 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Padding(
                       padding: const EdgeInsets.only(top: 24.0, bottom: 16.0),
                       child: Text(
-                        "My Tasks",
+                        "My Tasks ",
                         style: TextTheme.of(context).labelSmall,
                       ),
                     ),
