@@ -3,7 +3,6 @@ import 'package:tasky/Core/Theme/themes_controller.dart';
 import 'package:tasky/Core/Widgets/custom_checkbox.dart';
 import 'package:tasky/Core/Widgets/custom_svg_picture.dart';
 import 'package:tasky/Features/tasks/high_priority_screen.dart';
-import 'package:tasky/Features/home/home_screen.dart';
 import 'package:tasky/model/task_model.dart';
 
 class HighPriorityTasks extends StatefulWidget {
@@ -23,6 +22,7 @@ class HighPriorityTasks extends StatefulWidget {
 }
 
 class _HighPriorityTasksState extends State<HighPriorityTasks> {
+  List<TaskModel> tasks = [];
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -40,7 +40,7 @@ class _HighPriorityTasksState extends State<HighPriorityTasks> {
                 padding: const EdgeInsets.all(16),
                 child: Text(
                   "High Priority Tasks",
-                      style: Theme.of(context).textTheme.titleMedium,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
               ListView.builder(
