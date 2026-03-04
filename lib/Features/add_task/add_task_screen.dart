@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tasky/Core/Services/prefrances_maneger.dart';
 import 'package:tasky/Core/Widgets/custom_text_form_field.dart';
+import 'package:tasky/Core/constants/storage_key.dart';
 import 'package:tasky/model/task_model.dart';
 
 class AddTaskScreen extends StatefulWidget {
@@ -22,7 +23,7 @@ class _AddTaskState extends State<AddTaskScreen> {
   }
 
   void _lodeTask() async {
-    final finalTask = PrefrancesManeger().getString('tasks') ?? '[]';
+    final finalTask = PrefrancesManeger().getString(StorageKey.tasks) ?? '[]';
     final taskAfterDecode = jsonDecode(finalTask) as List<dynamic>;
     setState(() {
       task = taskAfterDecode
@@ -102,7 +103,7 @@ class _AddTaskState extends State<AddTaskScreen> {
                 ),
                 onPressed: () async {
                   if (_key.currentState?.validate() ?? false) {
-                    final taskJson = PrefrancesManeger().getString('tasks');
+                    final taskJson = PrefrancesManeger().getString(StorageKey.tasks);
                     List<dynamic> taskList = [];
                     if (taskJson != null) {
                       taskList = jsonDecode(taskJson);
@@ -116,7 +117,7 @@ class _AddTaskState extends State<AddTaskScreen> {
 
                     taskList.add(model.toMap());
                     await PrefrancesManeger().setString(
-                      'tasks',
+                     StorageKey.tasks,
                       jsonEncode(taskList),
                     );
                     Navigator.pop(context, true);

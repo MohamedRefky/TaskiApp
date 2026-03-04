@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tasky/Core/Services/prefrances_maneger.dart';
+import 'package:tasky/Core/constants/storage_key.dart';
 import 'package:tasky/model/task_model.dart';
 import 'package:tasky/Core/componant/task_list_widget.dart';
 
@@ -26,7 +27,7 @@ class _HighPriorityScreenState extends State<HighPriorityScreen> {
       isLoading = true;
     });
 
-    final taskJson = PrefrancesManeger().getString('tasks');
+    final taskJson = PrefrancesManeger().getString(StorageKey.tasks);
     final List<dynamic> decoded = jsonDecode(taskJson!);
     setState(() {
       highPriorityTask = decoded.map((e) => TaskModel.fromjeson(e)).toList();
@@ -42,7 +43,7 @@ class _HighPriorityScreenState extends State<HighPriorityScreen> {
 
 _deleteTask(int? id) async {
   if (id == null) return;
-  final taskJson = PrefrancesManeger().getString('tasks');
+  final taskJson = PrefrancesManeger().getString(StorageKey.tasks);
   if (taskJson != null) {
     final List<TaskModel> allTasks = (jsonDecode(taskJson) as List)
         .map((e) => TaskModel.fromjeson(e))
@@ -52,7 +53,7 @@ _deleteTask(int? id) async {
       highPriorityTask.removeWhere((element) => element.id == id);
     });
     final updateTask = allTasks.map((e) => e.toMap()).toList();
-    await PrefrancesManeger().setString('tasks', jsonEncode(updateTask));
+    await PrefrancesManeger().setString(StorageKey.tasks, jsonEncode(updateTask));
   }
 }
 
@@ -73,7 +74,7 @@ _deleteTask(int? id) async {
                     highPriorityTask[index].isDone = value ?? false;
                   });
 
-                  final allData = PrefrancesManeger().getString('tasks');
+                  final allData = PrefrancesManeger().getString(StorageKey.tasks);
                   if (allData != null) {
                     List<TaskModel> allDataList = (jsonDecode(allData) as List)
                         .map((e) => TaskModel.fromjeson(e))
@@ -85,7 +86,7 @@ _deleteTask(int? id) async {
                     allDataList[newIndex] = highPriorityTask[index];
 
                     await PrefrancesManeger().setString(
-                      'tasks',
+                     StorageKey.tasks,
                       jsonEncode(allDataList.map((e) => e.toMap()).toList()),
                     );
                     _loadTasks();

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tasky/Core/Services/prefrances_maneger.dart';
+import 'package:tasky/Core/constants/storage_key.dart';
 import 'package:tasky/Features/add_task/add_task_screen.dart';
 import 'package:tasky/model/task_model.dart';
 import 'package:tasky/Features/home/componant/achieved_tasks_widget.dart';
@@ -35,8 +36,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _lodeUserName() async {
     setState(() {
-      name = PrefrancesManeger().getString('username');
-      userImagePath = PrefrancesManeger().getString('user_image');
+      name = PrefrancesManeger().getString(StorageKey.username);
+      userImagePath = PrefrancesManeger().getString(StorageKey.userImage);
     });
   }
 
@@ -45,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
       isLoading = true;
     });
 
-    final taskJson = PrefrancesManeger().getString('tasks') ?? '[]';
+    final taskJson = PrefrancesManeger().getString(StorageKey.tasks) ?? '[]';
     final List<dynamic> decoded = jsonDecode(taskJson);
 
     setState(() {
@@ -73,13 +74,13 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     final updateTask = tasks.map((e) => e.toMap()).toList();
-    await PrefrancesManeger().setString('tasks', jsonEncode(updateTask));
+    await PrefrancesManeger().setString(StorageKey.tasks, jsonEncode(updateTask));
   }
 
   _deleteTask(int? id) async {
     if (id == null) return;
 
-    final taskJson = PrefrancesManeger().getString('tasks') ?? '[]';
+    final taskJson = PrefrancesManeger().getString(StorageKey.tasks) ?? '[]';
     final allTasks = (jsonDecode(taskJson) as List)
         .map((e) => TaskModel.fromjeson(e))
         .toList();
@@ -92,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     await PrefrancesManeger().setString(
-      'tasks',
+      StorageKey.tasks,
       jsonEncode(updatedTasks.map((e) => e.toMap()).toList()),
     );
   }

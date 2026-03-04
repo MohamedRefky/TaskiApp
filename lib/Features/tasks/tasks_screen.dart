@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:tasky/Core/Services/prefrances_maneger.dart';
-import 'package:tasky/model/task_model.dart';
 import 'package:tasky/Core/componant/task_list_widget.dart';
+import 'package:tasky/model/task_model.dart';
+
+import '../../Core/constants/storage_key.dart';
 
 class TasksScreen extends StatefulWidget {
   const TasksScreen({super.key});
@@ -27,7 +29,7 @@ class _TasksScreenState extends State<TasksScreen> {
       isLoading = true;
     });
 
-    final taskJson = PrefrancesManeger().getString('tasks') ?? '[]';
+    final taskJson = PrefrancesManeger().getString(StorageKey.tasks) ?? '[]';
 
     final List<dynamic> decoded = jsonDecode(taskJson);
     setState(() {
@@ -41,7 +43,7 @@ class _TasksScreenState extends State<TasksScreen> {
   _deleteTask(int? id) async {
     if (id == null) return;
 
-    final taskJson = PrefrancesManeger().getString('tasks') ?? '[]';
+    final taskJson = PrefrancesManeger().getString(StorageKey.tasks) ?? '[]';
     final allTasks = (jsonDecode(taskJson) as List)
         .map((e) => TaskModel.fromjeson(e))
         .toList();
@@ -51,7 +53,7 @@ class _TasksScreenState extends State<TasksScreen> {
     });
     final updatedTasks = allTasks.where((t) => t.id != id).toList();
     await PrefrancesManeger().setString(
-      'tasks',
+      StorageKey.tasks,
       jsonEncode(updatedTasks.map((e) => e.toMap()).toList()),
     );
   }
@@ -63,14 +65,13 @@ class _TasksScreenState extends State<TasksScreen> {
       body: isLoading
           ? Center(child: CircularProgressIndicator(color: Color(0xFFFFFCFC)))
           : TaskListWidget(
-
               tasks: tasks,
               onTap: (bool? value, int? index) async {
                 if (index == null) return;
                 setState(() {
                   tasks[index].isDone = value ?? false;
                 });
-                final allData = PrefrancesManeger().getString('tasks');
+                final allData = PrefrancesManeger().getString(StorageKey.tasks);
                 if (allData != null) {
                   List<TaskModel> allDataList = (jsonDecode(allData) as List)
                       .map((e) => TaskModel.fromjeson(e))
@@ -81,7 +82,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   );
                   allDataList[newIndex] = tasks[index];
                   PrefrancesManeger().setString(
-                    'tasks',
+                  StorageKey.tasks,
                     jsonEncode(allDataList.map((e) => e.toMap()).toList()),
                   );
                   _loadTasks();

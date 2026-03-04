@@ -2,9 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:tasky/Core/Services/prefrances_maneger.dart';
+import 'package:tasky/Core/componant/task_list_widget.dart';
+import 'package:tasky/Core/constants/storage_key.dart';
 import 'package:tasky/Features/home/home_screen.dart';
 import 'package:tasky/model/task_model.dart';
-import 'package:tasky/Core/componant/task_list_widget.dart';
 
 class CompletedTasksScreen extends StatefulWidget {
   const CompletedTasksScreen({super.key});
@@ -26,7 +27,7 @@ class _CompletedTasksScreenState extends State<CompletedTasksScreen> {
       isLoading = true;
     });
 
-    final taskJson = PrefrancesManeger().getString('tasks');
+    final taskJson = PrefrancesManeger().getString(StorageKey.tasks);
     final List<dynamic> decoded = jsonDecode(taskJson ?? '[]');
     setState(() {
       tasks = decoded.map((e) => TaskModel.fromjeson(e)).toList();
@@ -39,7 +40,7 @@ class _CompletedTasksScreenState extends State<CompletedTasksScreen> {
   // _deleteTask(int? id) async {
 
   //   if (id == null) return;
-  //   final taskJson = PrefrancesManeger().getString('tasks');
+  //   final taskJson = PrefrancesManeger().getString(StorageKey.tasks);
   //   if (taskJson != null) {
   //     final List<dynamic> decoded = jsonDecode(taskJson);
   //    tasks  = decoded.map((e) => TaskModel.fromjeson(e)).toList();
@@ -49,14 +50,14 @@ class _CompletedTasksScreenState extends State<CompletedTasksScreen> {
   //       tasks.removeWhere((element) => element.id == id);
   //     });
   //     final updateTask = tasks.map((e) => e.toMap()).toList();
-  //     await PrefrancesManeger().setString('tasks', jsonEncode(updateTask));
+  //     await PrefrancesManeger().setString(StorageKey.tasks, jsonEncode(updateTask));
   //   }
   // }
 
   _deleteTask(int? id) async {
     if (id == null) return;
 
-    final taskJson = PrefrancesManeger().getString('tasks') ?? '[]';
+    final taskJson = PrefrancesManeger().getString(StorageKey.tasks) ?? '[]';
     final allTasks = (jsonDecode(taskJson) as List)
         .map((e) => TaskModel.fromjeson(e))
         .toList();
@@ -68,7 +69,7 @@ class _CompletedTasksScreenState extends State<CompletedTasksScreen> {
     });
 
     await PrefrancesManeger().setString(
-      'tasks',
+      StorageKey.tasks,
       jsonEncode(updatedTasks.map((e) => e.toMap()).toList()),
     );
   }
@@ -88,7 +89,7 @@ class _CompletedTasksScreenState extends State<CompletedTasksScreen> {
                   tasks[index].isDone = value ?? false;
                 });
 
-                final allData = PrefrancesManeger().getString('tasks');
+                final allData = PrefrancesManeger().getString(StorageKey.tasks);
 
                 if (allData != null) {
                   List<TaskModel> allDataList = (jsonDecode(allData) as List)
@@ -100,7 +101,7 @@ class _CompletedTasksScreenState extends State<CompletedTasksScreen> {
                   );
                   allDataList[newIndex] = tasks[index];
                   await PrefrancesManeger().setString(
-                    'tasks',
+                    StorageKey.tasks,
                     jsonEncode(allDataList.map((e) => e.toMap()).toList()),
                   );
 

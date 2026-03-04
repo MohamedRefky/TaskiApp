@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:tasky/Core/Services/prefrances_maneger.dart';
 import 'package:tasky/Core/Theme/themes_controller.dart';
 import 'package:tasky/Core/Widgets/custom_svg_picture.dart';
+import 'package:tasky/Core/constants/storage_key.dart';
 import 'package:tasky/Features/navigaton/main_screen.dart';
 import 'package:tasky/Features/profile/user_details_screen.dart';
 import 'package:tasky/Features/welcome/welcome_screen.dart';
@@ -26,11 +27,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _lodeUserName() async {
     setState(() {
-      usarName = PrefrancesManeger().getString('username') ?? '';
+      usarName = PrefrancesManeger().getString(StorageKey.username) ?? '';
       motivationQuote =
-          PrefrancesManeger().getString('motivationQuote') ??
+          PrefrancesManeger().getString(StorageKey.motivationQuote) ??
           "One task at a time. One step closer.";
-      userImagePath = PrefrancesManeger().getString('user_image');
+      userImagePath = PrefrancesManeger().getString(StorageKey.userImage);
       isLoding = false;
     });
   }
@@ -156,9 +157,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Divider(),
                         ListTile(
                           onTap: () async {
-                            PrefrancesManeger().remove('username');
-                            PrefrancesManeger().remove('motivationQuote');
-                            PrefrancesManeger().remove('tasks');
+                            PrefrancesManeger().remove(StorageKey.username);
+                            PrefrancesManeger().remove(StorageKey.motivationQuote);
+                            PrefrancesManeger().remove(StorageKey.tasks);
                             Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
@@ -188,7 +189,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _saveImage(XFile file) async {
     final appDir = await getApplicationDocumentsDirectory();
     final newFile = await File(file.path).copy('${appDir.path}/${file.name}');
-    PrefrancesManeger().setString('user_image', newFile.path);
+    PrefrancesManeger().setString(StorageKey.userImage, newFile.path);
   }
 }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tasky/Core/Services/prefrances_maneger.dart';
 import 'package:tasky/Core/Widgets/custom_svg_picture.dart';
 import 'package:tasky/Core/Widgets/custom_text_form_field.dart';
+import 'package:tasky/Core/constants/storage_key.dart';
 import 'package:tasky/Features/navigaton/main_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -97,7 +98,7 @@ class WelcomeScreen extends StatelessWidget {
                           onPressed: () async {
                             if (_key.currentState?.validate() ?? false) {
                               await PrefrancesManeger().setString(
-                                'username',
+                                StorageKey.username,
                                 controller.value.text,
                               );
                               Navigator.push(
