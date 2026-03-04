@@ -1,9 +1,10 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:tasky/Core/Services/prefrances_maneger.dart';
+import 'package:tasky/Core/componant/task_list_widget.dart';
 import 'package:tasky/Core/constants/storage_key.dart';
 import 'package:tasky/model/task_model.dart';
-import 'package:tasky/Core/componant/task_list_widget.dart';
 
 class HighPriorityScreen extends StatefulWidget {
   const HighPriorityScreen({super.key});
@@ -41,66 +42,65 @@ class _HighPriorityScreenState extends State<HighPriorityScreen> {
     });
   }
 
-_deleteTask(int? id) async {
-  if (id == null) return;
-  final taskJson = PrefrancesManeger().getString(StorageKey.tasks);
-  if (taskJson != null) {
-    final List<TaskModel> allTasks = (jsonDecode(taskJson) as List)
-        .map((e) => TaskModel.fromjeson(e))
-        .toList();
-    allTasks.removeWhere((element) => element.id == id);
-    setState(() {
-      highPriorityTask.removeWhere((element) => element.id == id);
-    });
-    final updateTask = allTasks.map((e) => e.toMap()).toList();
-    await PrefrancesManeger().setString(StorageKey.tasks, jsonEncode(updateTask));
+  _deleteTask(int? id) async {
+    if (id == null) return;
+    final taskJson = PrefrancesManeger().getString(StorageKey.tasks);
+    if (taskJson != null) {
+      final List<TaskModel> allTasks = (jsonDecode(taskJson) as List)
+          .map((e) => TaskModel.fromjeson(e))
+          .toList();
+      allTasks.removeWhere((element) => element.id == id);
+      setState(() {
+        highPriorityTask.removeWhere((element) => element.id == id);
+      });
+      final updateTask = allTasks.map((e) => e.toMap()).toList();
+      await PrefrancesManeger().setString(
+        StorageKey.tasks,
+        jsonEncode(updateTask),
+      );
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("High Priority Tasks")),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: isLoading
-            ? Center(child: CircularProgressIndicator(color: Color(0xFFFFFCFC)))
-            : TaskListWidget(
-                tasks: highPriorityTask,
-                onTap: (bool? value, int? index) async {
-                  if (index == null) return;
+      body: isLoading
+          ? Center(child: CircularProgressIndicator(color: Color(0xFFFFFCFC)))
+          : TaskListWidget(
+              tasks: highPriorityTask,
+              onTap: (bool? value, int? index) async {
+                if (index == null) return;
+                setState(() {
+                  highPriorityTask[index].isDone = value ?? false;
+                });
 
-                  setState(() {
-                    highPriorityTask[index].isDone = value ?? false;
-                  });
+                final allData = PrefrancesManeger().getString(StorageKey.tasks);
+                if (allData != null) {
+                  List<TaskModel> allDataList = (jsonDecode(allData) as List)
+                      .map((e) => TaskModel.fromjeson(e))
+                      .toList();
 
-                  final allData = PrefrancesManeger().getString(StorageKey.tasks);
-                  if (allData != null) {
-                    List<TaskModel> allDataList = (jsonDecode(allData) as List)
-                        .map((e) => TaskModel.fromjeson(e))
-                        .toList();
+                  final newIndex = allDataList.indexWhere(
+                    (e) => e.id == highPriorityTask[index].id,
+                  );
+                  allDataList[newIndex] = highPriorityTask[index];
 
-                    final newIndex = allDataList.indexWhere(
-                      (e) => e.id == highPriorityTask[index].id,
-                    );
-                    allDataList[newIndex] = highPriorityTask[index];
-
-                    await PrefrancesManeger().setString(
-                     StorageKey.tasks,
-                      jsonEncode(allDataList.map((e) => e.toMap()).toList()),
-                    );
-                    _loadTasks();
-                  }
-                },
-                emptyMessage: 'No Tasks Found',
-                onDelete: (int? id) {
-                  _deleteTask(id);
-                },
-                onEdit: () {
+                  await PrefrancesManeger().setString(
+                    StorageKey.tasks,
+                    jsonEncode(allDataList.map((e) => e.toMap()).toList()),
+                  );
                   _loadTasks();
-                },
-              ),
-      ),
+                }
+              },
+              emptyMessage: 'No Tasks Found',
+              onDelete: (int? id) {
+                _deleteTask(id);
+              },
+              onEdit: () {
+                _loadTasks();
+              },
+            ),
     );
   }
 }

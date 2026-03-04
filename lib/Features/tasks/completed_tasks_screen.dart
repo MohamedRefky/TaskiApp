@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:tasky/Core/Services/prefrances_maneger.dart';
 import 'package:tasky/Core/componant/task_list_widget.dart';
 import 'package:tasky/Core/constants/storage_key.dart';
-import 'package:tasky/Features/home/home_screen.dart';
 import 'package:tasky/model/task_model.dart';
 
 class CompletedTasksScreen extends StatefulWidget {
@@ -16,6 +15,7 @@ class CompletedTasksScreen extends StatefulWidget {
 
 class _CompletedTasksScreenState extends State<CompletedTasksScreen> {
   List<TaskModel> tasks = [];
+  bool isLoading = false;
   @override
   void initState() {
     _loadTasks();
