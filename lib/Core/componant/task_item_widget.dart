@@ -5,6 +5,7 @@ import 'package:tasky/Core/Services/prefrances_maneger.dart';
 import 'package:tasky/Core/Theme/themes_controller.dart';
 import 'package:tasky/Core/Widgets/custom_checkbox.dart';
 import 'package:tasky/Core/Widgets/custom_text_form_field.dart';
+import 'package:tasky/Core/constants/storage_key.dart';
 import 'package:tasky/Core/enums/task_item_action_enums.dart';
 import 'package:tasky/model/task_model.dart';
 
@@ -194,7 +195,7 @@ class TaskItemWidget extends StatelessWidget {
                     ),
                     onPressed: () async {
                       if (key.currentState?.validate() ?? false) {
-                        final taskJson = PrefrancesManeger().getString('tasks');
+                        final taskJson = PrefrancesManeger().getString(StorageKey.tasks);
                         List<dynamic> taskList = [];
                         if (taskJson != null) {
                           taskList = jsonDecode(taskJson);
@@ -211,7 +212,7 @@ class TaskItemWidget extends StatelessWidget {
                             .firstWhere((e) => e['id'] == model.id)
                             .updateAll((key, value) => newModel.toMap()[key]); 
                         await PrefrancesManeger().setString(
-                          'tasks',
+                         StorageKey.tasks,
                           jsonEncode(taskList),
                         );
                      

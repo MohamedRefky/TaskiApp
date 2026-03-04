@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tasky/Core/Services/prefrances_maneger.dart';
 import 'package:tasky/Core/Widgets/custom_text_form_field.dart';
+import 'package:tasky/Core/constants/storage_key.dart';
 
 class UserDetailsScreen extends StatefulWidget {
   const UserDetailsScreen({
@@ -83,11 +84,11 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                 onPressed: () async {
                   if (_key.currentState!.validate()) {
                     await PrefrancesManeger().setString(
-                      "username",
+                      StorageKey.username,
                       userNamecontroller.text,
                     );
                     await PrefrancesManeger().setString(
-                      "motivationQuote",
+                      StorageKey.motivationQuote,
                       motivationQuotecontroller.text,
                     );
                     Navigator.pop(context, true);
