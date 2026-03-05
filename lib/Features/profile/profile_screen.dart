@@ -21,11 +21,11 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
-    _lodeUserName();
+    _loadUserData();
     super.initState();
   }
 
-  void _lodeUserName() async {
+  void _loadUserData() async {
     setState(() {
       usarName = PrefrancesManeger().getString(StorageKey.username) ?? '';
       motivationQuote =
@@ -122,7 +122,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             );
                             if (resalt != null && resalt) {
-                              _lodeUserName();
+                              _loadUserData();
                             }
                           },
                           contentPadding: EdgeInsets.zero,
@@ -158,7 +158,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ListTile(
                           onTap: () async {
                             PrefrancesManeger().remove(StorageKey.username);
-                            PrefrancesManeger().remove(StorageKey.motivationQuote);
+                            PrefrancesManeger().remove(
+                              StorageKey.motivationQuote,
+                            );
                             PrefrancesManeger().remove(StorageKey.tasks);
                             Navigator.pushAndRemoveUntil(
                               context,

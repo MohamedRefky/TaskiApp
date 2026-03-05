@@ -1,11 +1,12 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:tasky/Core/Services/prefrances_maneger.dart';
 import 'package:tasky/Core/constants/storage_key.dart';
 import 'package:tasky/model/task_model.dart';
 
 class HomeController with ChangeNotifier {
-  String? name;
+  String? userName;
   List<TaskModel> tasks = [];
   bool isLoading = false;
   int totalTask = 0;
@@ -16,10 +17,10 @@ class HomeController with ChangeNotifier {
 
 init(){
   loadTask();
-  lodeUserName();
+  loadUserData();
 }
-  void lodeUserName() async {
-    name = PrefrancesManeger().getString(StorageKey.username);
+  void loadUserData() async {
+    userName = PrefrancesManeger().getString(StorageKey.username);
     userImagePath = PrefrancesManeger().getString(StorageKey.userImage);
 
     notifyListeners();
