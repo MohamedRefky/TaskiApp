@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:tasky/Features/tasks/completed_tasks_screen.dart';
 import 'package:tasky/Features/home/home_screen.dart' show HomeScreen;
 import 'package:tasky/Features/profile/profile_screen.dart';
-import 'package:tasky/Features/tasks/tasks_screen.dart';
+import 'package:tasky/Features/tasks/completed_tasks_screen.dart';
+import 'package:tasky/Features/tasks/todoo_tasks_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -15,7 +15,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   final List<Widget> _screen = [
     HomeScreen(),
-    TasksScreen(),
+    TodoTasks(),
     CompletedTasksScreen(),
     ProfileScreen(),
   ];
@@ -34,19 +34,19 @@ class _MainScreenState extends State<MainScreen> {
 
         items: [
           BottomNavigationBarItem(
-            icon: _buildSvgPicture('assets/images/home_icon.svg',0),
+            icon: _buildSvgPicture('assets/images/home_icon.svg', 0),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: _buildSvgPicture('assets/images/todo_icon.svg',1),
+            icon: _buildSvgPicture('assets/images/todo_icon.svg', 1),
             label: "To Do",
           ),
           BottomNavigationBarItem(
-            icon: _buildSvgPicture('assets/images/completed_icon.svg',2),
+            icon: _buildSvgPicture('assets/images/completed_icon.svg', 2),
             label: "Completed",
           ),
           BottomNavigationBarItem(
-            icon: _buildSvgPicture('assets/images/profile_icon.svg',3),
+            icon: _buildSvgPicture('assets/images/profile_icon.svg', 3),
             label: "Profile",
           ),
         ],
@@ -54,7 +54,7 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  SvgPicture _buildSvgPicture(String path ,int index) {
+  SvgPicture _buildSvgPicture(String path, int index) {
     return SvgPicture.asset(
       path,
       colorFilter: ColorFilter.mode(

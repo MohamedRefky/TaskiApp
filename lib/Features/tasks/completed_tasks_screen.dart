@@ -1,121 +1,44 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:tasky/Core/Services/prefrances_maneger.dart';
+import 'package:provider/provider.dart';
 import 'package:tasky/Core/componant/task_list_widget.dart';
-import 'package:tasky/Core/constants/storage_key.dart';
-import 'package:tasky/model/task_model.dart';
+import 'package:tasky/Features/tasks/controller/tasks_controller.dart';
 
-class CompletedTasksScreen extends StatefulWidget {
+class CompletedTasksScreen extends StatelessWidget {
   const CompletedTasksScreen({super.key});
 
   @override
-  State<CompletedTasksScreen> createState() => _CompletedTasksScreenState();
-}
-
-class _CompletedTasksScreenState extends State<CompletedTasksScreen> {
-  List<TaskModel> tasks = [];
-  bool isLoading = false;
-  @override
-  void initState() {
-    _loadTasks();
-    super.initState();
-  }
-
-  void _loadTasks() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    final taskJson = PrefrancesManeger().getString(StorageKey.tasks);
-    final List<dynamic> decoded = jsonDecode(taskJson ?? '[]');
-    setState(() {
-      tasks = decoded.map((e) => TaskModel.fromjeson(e)).toList();
-      tasks = tasks.where((element) => element.isDone).toList();
-
-      isLoading = false;
-    });
-  }
-
-  // _deleteTask(int? id) async {
-
-  //   if (id == null) return;
-  //   final taskJson = PrefrancesManeger().getString(StorageKey.tasks);
-  //   if (taskJson != null) {
-  //     final List<dynamic> decoded = jsonDecode(taskJson);
-  //    tasks  = decoded.map((e) => TaskModel.fromjeson(e)).toList();
-  //     tasks.removeWhere((element) => element.id == id);
-
-  //     setState(() {
-  //       tasks.removeWhere((element) => element.id == id);
-  //     });
-  //     final updateTask = tasks.map((e) => e.toMap()).toList();
-  //     await PrefrancesManeger().setString(StorageKey.tasks, jsonEncode(updateTask));
-  //   }
-  // }
-
-  _deleteTask(int? id) async {
-    if (id == null) return;
-
-    final taskJson = PrefrancesManeger().getString(StorageKey.tasks) ?? '[]';
-    final allTasks = (jsonDecode(taskJson) as List)
-        .map((e) => TaskModel.fromjeson(e))
-        .toList();
-
-    final updatedTasks = allTasks.where((t) => t.id != id).toList();
-
-    setState(() {
-      tasks.removeWhere((t) => t.id == id);
-    });
-
-    await PrefrancesManeger().setString(
-      StorageKey.tasks,
-      jsonEncode(updatedTasks.map((e) => e.toMap()).toList()),
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Completed Tasks")),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator(color: Color(0xFFFFFCFC)))
-          : TaskListWidget(
-              tasks: tasks,
-              onTap: (bool? value, int? index) async {
-                if (index == null) return;
+    return ChangeNotifierProvider(
+      create: (BuildContext context) => TasksController()..init(),
+      builder: (context, _) {
+        final controller = context.read<TasksController>();
+        return Scaffold(
+          appBar: AppBar(title: Text("Completed Tasks")),
+          body: controller.isLoading
+              ? Center(
+                  child: CircularProgressIndicator(color: Color(0xFFFFFCFC)),
+                )
+              : Consumer<TasksController>(
+                  builder: (BuildContext context, value, Widget? child) {
+                    return TaskListWidget(
+                      tasks: value.completeTasks,
+                      onTap: (bool? value, int? index) async {
+                        controller.doneCompleteTask(value, index);
 
-                setState(() {
-                  tasks[index].isDone = value ?? false;
-                });
-
-                final allData = PrefrancesManeger().getString(StorageKey.tasks);
-
-                if (allData != null) {
-                  List<TaskModel> allDataList = (jsonDecode(allData) as List)
-                      .map((e) => TaskModel.fromjeson(e))
-                      .toList();
-
-                  final newIndex = allDataList.indexWhere(
-                    (e) => e.id == tasks[index].id,
-                  );
-                  allDataList[newIndex] = tasks[index];
-                  await PrefrancesManeger().setString(
-                    StorageKey.tasks,
-                    jsonEncode(allDataList.map((e) => e.toMap()).toList()),
-                  );
-
-                  _loadTasks();
-                }
-              },
-              emptyMessage: 'No Tasks Found',
-              onDelete: (int? id) {
-                _deleteTask(id);
-              },
-              onEdit: () {
-                _loadTasks();
-              },
-            ),
+                        controller.init();
+                      },
+                      emptyMessage: 'No Tasks Found',
+                      onDelete: (int? id ) {
+                        controller.deleteTask(id);
+                      },
+                      onEdit: () {
+                        controller.init();
+                      },
+                    );
+                  },
+                ),
+        );
+      },
     );
   }
 }
