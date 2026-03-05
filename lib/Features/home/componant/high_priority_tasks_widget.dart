@@ -1,21 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tasky/Core/Theme/themes_controller.dart';
 import 'package:tasky/Core/Widgets/custom_checkbox.dart';
 import 'package:tasky/Core/Widgets/custom_svg_picture.dart';
+import 'package:tasky/Features/home/home_controller.dart';
 import 'package:tasky/Features/tasks/high_priority_screen.dart';
 import 'package:tasky/model/task_model.dart';
 
 class HighPriorityTasks extends StatefulWidget {
-  const HighPriorityTasks({
-    super.key,
-    required this.tasks,
-    required this.onTap,
-    required this.refresh,
-  });
-
-  final List<TaskModel> tasks;
-  final Function(bool?, int?) onTap;
-  final Function refresh;
+  const HighPriorityTasks({super.key});
 
   @override
   State<HighPriorityTasks> createState() => _HighPriorityTasksState();
@@ -27,94 +20,122 @@ class _HighPriorityTasksState extends State<HighPriorityTasks> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Theme.of(context).colorScheme.primaryContainer,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Text(
-                  "High Priority Tasks",
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-              ),
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: tasks.where((e) => e.isHighPriority).length > 4
-                    ? 4
-                    : tasks.where((e) => e.isHighPriority).length,
-                physics: NeverScrollableScrollPhysics(),
-                itemBuilder: (BuildContext context, int index) {
-                  final task = tasks
-                      .where((e) => e.isHighPriority)
-                      .toList()[index];
-                  return Row(
+        Consumer<HomeController>(
+          builder:
+              (BuildContext context, HomeController controller, Widget? child) {
+                final tasksList = controller.tasks;
+
+                return Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primaryContainer,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      CustomCheckbox(
-                        value: task.isDone,
-                        onChanged: (bool? value) {
-                          final index = widget.tasks.indexWhere(
-                            (e) => e.id == task.id,
-                          );
-                          widget.onTap(value, index);
-                        },
-                      ),
                       Expanded(
-                        child: Text(
-                          task.taskName,
-                          style: task.isDone
-                              ? TextTheme.of(context).titleLarge
-                              : TextTheme.of(context).titleMedium,
-                          maxLines: 1,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Text(
+                                'High Priority Tasks',
+                                style: TextStyle(
+                                  color: Color(0xFF15B86C),
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                            ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount:
+                                  tasksList.reversed
+                                          .where((e) => e.isHighPriority)
+                                          .length >
+                                      4
+                                  ? 4
+                                  : tasksList.reversed
+                                        .where((e) => e.isHighPriority)
+                                        .length,
+                              itemBuilder: (BuildContext context, int index) {
+                                final task = tasksList.reversed
+                                    .where((e) => e.isHighPriority)
+                                    .toList()[index];
+                                return Row(
+                                  children: [
+                                    CustomCheckbox(
+                                      value: task.isDone,
+                                      onChanged: (bool? value) {
+                                        final index = tasksList.indexWhere(
+                                          (e) => e.id == task.id,
+                                        );
+                                        controller.doneTask(value, index);
+                                      },
+                                    ),
+                                    Flexible(
+                                      child: Text(
+                                        task.taskName,
+                                        style: task.isDone
+                                            ? Theme.of(
+                                                context,
+                                              ).textTheme.titleLarge
+                                            : Theme.of(
+                                                context,
+                                              ).textTheme.titleMedium,
+                                        maxLines: 1,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) {
+                                return HighPriorityScreen();
+                              },
+                            ),
+                          );
+                          controller.loadTask();
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Container(
+                            height: 56,
+                            width: 48,
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.primaryContainer,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: ThemesController.isDark()
+                                    ? Color(0xFF6E6E6E)
+                                    : Color(0xFFD1DAD6),
+                              ),
+                            ),
+                            child: CustomSvgPicture(
+                              path: "assets/images/arrow-up-right.svg",
+                              height: 24,
+                              width: 24,
+                            ),
+                          ),
                         ),
                       ),
                     ],
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
-        Positioned(
-          right: 15,
-          bottom: 12,
-          child: GestureDetector(
-            onTap: () async {
-              await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const HighPriorityScreen(),
-                ),
-              );
-              widget.refresh();
-            },
-            child: Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Theme.of(context).colorScheme.primaryContainer,
-                border: Border.all(
-                  color: ThemesController.isDark()
-                      ? Color(0xFF6E6E6E)
-                      : Color(0xFFD1DAD6),
-                ),
-              ),
-
-              child: Center(
-                child: CustomSvgPicture(
-                  path: "assets/images/arrow-up-right.svg",
-                  width: 24,
-                  height: 24,
-                ),
-              ),
-            ),
-          ),
+                  ),
+                );
+              },
         ),
       ],
     );

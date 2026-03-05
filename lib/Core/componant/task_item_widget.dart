@@ -76,17 +76,17 @@ class TaskItemWidget extends StatelessWidget {
                   : (model.isDone ? Color(0xFF6A6A6A) : Color(0xFF3A4640)),
               size: 30,
             ),
-            onSelected: (value)async {
-              switch (value)  {
+            onSelected: (value) async {
+              switch (value) {
                 case TaskItemActionEnums.markAsDone:
                   onChanged(!model.isDone);
                 case TaskItemActionEnums.delete:
-                 await _showAlertDialog(context);
+                  await _showAlertDialog(context);
                 case TaskItemActionEnums.edit:
-                 final resalt = await _showButtomShet(context, model);
-                if (resalt == true) {
-                  onEdit();
-                }
+                  final resalt = await _showButtomShet(context, model);
+                  if (resalt == true) {
+                    onEdit();
+                  }
               }
             },
             itemBuilder: (context) => TaskItemActionEnums.values
@@ -98,8 +98,8 @@ class TaskItemWidget extends StatelessWidget {
     );
   }
 
-  Future <String?> _showAlertDialog(context) {
-   return showDialog(
+  Future<String?> _showAlertDialog(context) {
+    return showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Delete Task'),
@@ -124,20 +124,19 @@ class TaskItemWidget extends StatelessWidget {
     );
   }
 
-  Future <bool?> _showButtomShet(context, TaskModel model) {
+  Future<bool?> _showButtomShet(context, TaskModel model) {
     bool isHighPriority = model.isHighPriority;
     final key = GlobalKey<FormState>();
     final taskNameController = TextEditingController(text: model.taskName);
     final taskDescriptionController = TextEditingController(
       text: model.taskDescription,
     );
-   return showModalBottomSheet(
+    return showModalBottomSheet(
       // isDismissible: false,
       context: context,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) {
-          
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
             child: Form(
@@ -195,7 +194,9 @@ class TaskItemWidget extends StatelessWidget {
                     ),
                     onPressed: () async {
                       if (key.currentState?.validate() ?? false) {
-                        final taskJson = PrefrancesManeger().getString(StorageKey.tasks);
+                        final taskJson = PrefrancesManeger().getString(
+                          StorageKey.tasks,
+                        );
                         List<dynamic> taskList = [];
                         if (taskJson != null) {
                           taskList = jsonDecode(taskJson);
@@ -210,12 +211,12 @@ class TaskItemWidget extends StatelessWidget {
 
                         taskList
                             .firstWhere((e) => e['id'] == model.id)
-                            .updateAll((key, value) => newModel.toMap()[key]); 
+                            .updateAll((key, value) => newModel.toMap()[key]);
                         await PrefrancesManeger().setString(
-                         StorageKey.tasks,
+                          StorageKey.tasks,
                           jsonEncode(taskList),
                         );
-                     
+
                         Navigator.pop(context, true);
                       }
                     },
