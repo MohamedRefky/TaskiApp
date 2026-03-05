@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:tasky/Core/componant/task_list_widget.dart';
 import 'package:tasky/Features/tasks/controller/tasks_controller.dart';
 
-class HighPriorityScreen extends StatelessWidget {
-  const HighPriorityScreen({super.key});
+class TodoTasks extends StatelessWidget {
+  const TodoTasks({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class HighPriorityScreen extends StatelessWidget {
       builder: (context, _) {
         final controller = context.read<TasksController>();
         return Scaffold(
-          appBar: AppBar(title: Text("High Priority Tasks")),
+          appBar: AppBar(title: Text("To Do Tasks")),
           body: controller.isLoading
               ? Center(
                   child: CircularProgressIndicator(color: Color(0xFFFFFCFC)),
@@ -21,9 +21,9 @@ class HighPriorityScreen extends StatelessWidget {
               : Consumer<TasksController>(
                   builder: (BuildContext context, value, Widget? child) {
                     return TaskListWidget(
-                      tasks: value.highPriorityTask,
-                      onTap: (bool? value, int? index) async {
-                        controller.doneHighPriorityTask(value, index);
+                      tasks: value.todoTasks,
+                      onTap: (value, index) async {
+                        controller.doneTask(value, index);
                       },
                       emptyMessage: 'No Tasks Found',
                       onDelete: (int? id) {
