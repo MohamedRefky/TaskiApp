@@ -8,6 +8,7 @@ import 'package:tasky/Features/home/componant/achieved_tasks_widget.dart';
 import 'package:tasky/Features/home/componant/high_priority_tasks_widget.dart';
 import 'package:tasky/Features/home/componant/sliver_task_list_widget.dart';
 import 'package:tasky/Features/home/home_controller.dart';
+import 'package:tasky/Features/tasks/controller/tasks_controller.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -118,7 +119,7 @@ class HomeScreen extends StatelessWidget {
                     );
 
                     if (result != null && result) {
-                      context.read<HomeController>().loadTask();
+                      context.read<TasksController>().init();
                     }
                   },
                   label: Text('Add New Task'),

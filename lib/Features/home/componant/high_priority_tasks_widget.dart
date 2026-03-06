@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tasky/Core/Theme/themes_controller.dart';
 import 'package:tasky/Core/Widgets/custom_checkbox.dart';
 import 'package:tasky/Core/Widgets/custom_svg_picture.dart';
-import 'package:tasky/Features/home/home_controller.dart';
+import 'package:tasky/Features/tasks/controller/tasks_controller.dart';
 import 'package:tasky/Features/tasks/high_priority_screen.dart';
 import 'package:tasky/model/task_model.dart';
 
@@ -20,9 +20,9 @@ class _HighPriorityTasksState extends State<HighPriorityTasks> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Consumer<HomeController>(
+        Consumer<TasksController>(
           builder:
-              (BuildContext context, HomeController controller, Widget? child) {
+              (BuildContext context, TasksController controller, Widget? child) {
                 final tasksList = controller.tasks;
 
                 return Container(
@@ -68,11 +68,8 @@ class _HighPriorityTasksState extends State<HighPriorityTasks> {
                                   children: [
                                     CustomCheckbox(
                                       value: task.isDone,
-                                      onChanged: (bool? value) {
-                                        final index = tasksList.indexWhere(
-                                          (e) => e.id == task.id,
-                                        );
-                                        controller.doneTask(value, index);
+                                      onChanged: (bool? value) {  
+                                        controller.doneTask(value, task.id);
                                       },
                                     ),
                                     Flexible(
@@ -105,7 +102,7 @@ class _HighPriorityTasksState extends State<HighPriorityTasks> {
                               },
                             ),
                           );
-                          controller.loadTask();
+                          controller.init();
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),

@@ -28,7 +28,7 @@ class AddTaskController with ChangeNotifier {
         isHighPriority: isHighPriority,
       );
 
-      taskList.add(model.toMap());
+      taskList.add(model.toJson());
       await PrefrancesManeger().setString(
         StorageKey.tasks,
         jsonEncode(taskList),

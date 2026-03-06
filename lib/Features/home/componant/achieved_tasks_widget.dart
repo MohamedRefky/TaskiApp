@@ -1,7 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tasky/features/home/home_controller.dart';
+import 'package:tasky/Features/tasks/controller/tasks_controller.dart';
+
 
 class AchievedTasksWidget extends StatelessWidget {
   const AchievedTasksWidget({
@@ -12,8 +13,8 @@ class AchievedTasksWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<HomeController>(
-      builder: (BuildContext context,HomeController controller, Widget? child) {
+    return Consumer<TasksController>(
+      builder: (BuildContext context,TasksController controller, Widget? child) {
         return Container(
           width: double.infinity,
           decoration: BoxDecoration(
@@ -33,7 +34,7 @@ class AchievedTasksWidget extends StatelessWidget {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    '${controller.totalDoneTask} Out of ${controller.totalTask} Done',
+                    '${controller.totalDoneTasks} Out of ${controller.totalTask} Done',
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
                 ],
@@ -47,7 +48,7 @@ class AchievedTasksWidget extends StatelessWidget {
                       height: 48,
                       width: 48,
                       child: CircularProgressIndicator(
-                        value: controller.persent,
+                        value: controller.percent,
                         backgroundColor: Color(0xFF6D6D6D),
                         valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF15B86C)),
                         strokeWidth: 4,
@@ -55,7 +56,7 @@ class AchievedTasksWidget extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "${((controller.persent * 100).toInt())}%",
+                    "${((controller.percent * 100).toInt())}%",
                     style: Theme.of(context).textTheme.titleMedium,
                   )
                 ],
