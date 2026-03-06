@@ -1,33 +1,40 @@
 class TaskModel {
+  final int id;
   final String taskName;
   final String taskDescription;
   final bool isHighPriority;
   bool isDone;
-  final int ? id ;
+
   TaskModel({
     required this.id,
     required this.taskName,
     required this.taskDescription,
     required this.isHighPriority,
-     this.isDone = false,
+    this.isDone = false,
   });
-  factory TaskModel.fromjeson(Map<String, dynamic> json) {
+
+  factory TaskModel.fromJson(Map<String, dynamic> json) {
     return TaskModel(
-      id: json['id'] ?? 0,
-      taskName: json['taskName'],
-      taskDescription: json['taskDescription'],
-      isHighPriority: json['isHighPriority'],
-      isDone: json['isDone'] ?? false,
+      id: json["id"],
+      taskName: json["taskName"],
+      taskDescription: json["taskDescription"],
+      isHighPriority: json["isHighPriority"],
+      isDone: json["isDone"] ?? false,
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
-      'id': id ?? 0,
-      'taskName': taskName,
-      'taskDescription': taskDescription,
-      'isHighPriority': isHighPriority,
-      'isDone': isDone,
+      "id": id,
+      "taskName": taskName,
+      "taskDescription": taskDescription,
+      "isHighPriority": isHighPriority,
+      "isDone": isDone,
     };
+  }
+
+  @override
+  String toString() {
+    return 'TaskModel{id: $id, taskName: $taskName, taskDescription: $taskDescription, isHighPriority: $isHighPriority, isDone: $isDone}';
   }
 }

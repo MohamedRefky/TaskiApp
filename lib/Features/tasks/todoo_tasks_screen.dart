@@ -8,35 +8,29 @@ class TodoTasks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<TasksController>(
-      create: (_) => TasksController()..init(),
-      builder: (context, _) {
-        final controller = context.read<TasksController>();
-        return Scaffold(
-          appBar: AppBar(title: Text("To Do Tasks")),
-          body: controller.isLoading
-              ? Center(
-                  child: CircularProgressIndicator(color: Color(0xFFFFFCFC)),
-                )
-              : Consumer<TasksController>(
-                  builder: (BuildContext context, value, Widget? child) {
-                    return TaskListWidget(
-                      tasks: value.todoTasks,
-                      onTap: (value, index) async {
-                        controller.doneTask(value, index);
-                      },
-                      emptyMessage: 'No Tasks Found',
-                      onDelete: (int? id) {
-                        controller.deleteTask(id);
-                      },
-                      onEdit: () {
-                        controller.init();
-                      },
-                    );
+    final controller = context.read<TasksController>();
+
+    return Scaffold(
+      appBar: AppBar(title: Text("To Do Tasks")),
+      body: controller.isLoading
+          ? Center(child: CircularProgressIndicator(color: Color(0xFFFFFCFC)))
+          : Consumer<TasksController>(
+              builder: (BuildContext context, valueController, Widget? child) {
+                return TaskListWidget(
+                  tasks: valueController.todoTasks,
+                  onTap: (value, index) async {
+                    controller.doneTask(value, valueController.todoTasks[index!].id);
                   },
-                ),
-        );
-      },
+                  emptyMessage: 'No Tasks Found',
+                  onDelete: (int? id) {
+                    controller.deleteTask(id);
+                  },
+                  onEdit: () {
+                    controller.init();
+                  },
+                );
+              },
+            ),
     );
   }
 }

@@ -114,7 +114,7 @@ class TaskItemWidget extends StatelessWidget {
           TextButton(
             style: TextButton.styleFrom(foregroundColor: Colors.red),
             onPressed: () {
-              onDelete(model.id!);
+              onDelete(model.id);
               Navigator.of(context).pop();
             },
             child: Text('Delete'),
@@ -211,7 +211,7 @@ class TaskItemWidget extends StatelessWidget {
 
                         taskList
                             .firstWhere((e) => e['id'] == model.id)
-                            .updateAll((key, value) => newModel.toMap()[key]);
+                            .updateAll((key, value) => newModel.toJson()[key]);
                         await PrefrancesManeger().setString(
                           StorageKey.tasks,
                           jsonEncode(taskList),
