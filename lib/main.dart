@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:tasky/Core/Services/prefrances_maneger.dart';
 import 'package:tasky/Core/Theme/dark_theme.dart';
 import 'package:tasky/Core/Theme/light_theme.dart';
 import 'package:tasky/Core/Theme/themes_controller.dart';
 import 'package:tasky/Core/constants/storage_key.dart';
-import 'package:tasky/Features/navigaton/main_screen.dart';
 import 'package:tasky/Features/tasks/controller/tasks_controller.dart';
 import 'package:tasky/Features/welcome/welcome_screen.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await ScreenUtil.ensureScreenSize();
   await PrefrancesManeger().init();
   ThemesController().init();
 
@@ -33,13 +32,19 @@ class MyApp extends StatelessWidget {
       builder: (context, ThemeMode themeMode, Widget? child) {
         return ChangeNotifierProvider<TasksController>(
           create: (_) => TasksController()..init(),
-          child: MaterialApp(
-            title: 'Tasky App',
-            debugShowCheckedModeBanner: false,
-            theme: lightTheme,
-            darkTheme: darkTheme,
-            themeMode: themeMode,
-            home: username == null ? WelcomeScreen() : MainScreen(),
+          child: ScreenUtilInit(
+            designSize: const Size(375, 809),
+            minTextAdapt: true,
+            builder: (context, _) {
+              return MaterialApp(
+                title: 'Tasky App',
+                debugShowCheckedModeBanner: false,
+                theme: lightTheme,
+                darkTheme: darkTheme,
+                themeMode: themeMode,
+                home: username == null ? WelcomeScreen() : WelcomeScreen(),
+              );
+            },
           ),
         );
       },

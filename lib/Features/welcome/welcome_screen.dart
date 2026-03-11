@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tasky/Core/Services/prefrances_maneger.dart';
 import 'package:tasky/Core/Widgets/custom_svg_picture.dart';
 import 'package:tasky/Core/Widgets/custom_text_form_field.dart';
@@ -23,20 +24,20 @@ class WelcomeScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 8),
+                  SizedBox(height: 8.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CustomSvgPicture.whithColorFilter(
                         path: 'assets/images/logo.svg',
-                        height: 42,
-                        width: 42,
+                        height: 42.h,
+                        width: 42.w,
                       ),
-                      SizedBox(width: 16),
+                      SizedBox(width: 16.w),
                       Text('Tasky', style: TextTheme.of(context).displayMedium),
                     ],
                   ),
-                  SizedBox(height: 118),
+                  SizedBox(height: 118.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -44,15 +45,15 @@ class WelcomeScreen extends StatelessWidget {
                         'Welcome To Tasky ',
                         style: Theme.of(context).textTheme.displaySmall,
                       ),
-                      SizedBox(width: 8),
+                      SizedBox(width: 8.w),
                       CustomSvgPicture.whithColorFilter(
                         path: 'assets/images/waving-hand.svg',
-                        height: 28,
-                        width: 28,
+                        height: 28.h,
+                        width: 28.w,
                       ),
                     ],
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(height: 8.h),
                   Text(
                     'Your productivity journey starts here.',
                     style: Theme.of(
@@ -62,10 +63,10 @@ class WelcomeScreen extends StatelessWidget {
                   SizedBox(height: 24),
                   CustomSvgPicture.whithColorFilter(
                     path: 'assets/images/pana.svg',
-                    height: 215,
-                    width: 215,
+                    height: 215.h,
+                    width: 215.w,
                   ),
-                  SizedBox(height: 28),
+                  SizedBox(height: 28.h),
                   Padding(
                     padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
                     child: Column(
@@ -82,11 +83,11 @@ class WelcomeScreen extends StatelessWidget {
                             return null;
                           },
                         ),
-                        SizedBox(height: 24),
+                        SizedBox(height: 24.h),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             textStyle: TextStyle(
-                              fontSize: 16,
+                              fontSize: 16.sp,
                               fontWeight: FontWeight.w500,
                             ),
                             padding: EdgeInsets.fromLTRB(24, 10, 24, 10),
@@ -101,7 +102,7 @@ class WelcomeScreen extends StatelessWidget {
                                 StorageKey.username,
                                 controller.value.text,
                               );
-                              Navigator.push(
+                              Navigator.push(                            
                                 context,
                                 MaterialPageRoute(
                                   builder: (BuildContext context) {
@@ -110,11 +111,7 @@ class WelcomeScreen extends StatelessWidget {
                                 ),
                               );
                             } else {
-                              //   ScaffoldMessenger.of(context).showSnackBar(
-                              //     SnackBar(
-                              //       content: Text('Please enter your full name'),
-                              //     ),
-                              //   );
+                         
                             }
                           },
                           child: Text('Let\'s Get Started'),
