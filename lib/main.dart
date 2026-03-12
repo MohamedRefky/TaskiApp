@@ -6,6 +6,7 @@ import 'package:tasky/Core/Theme/dark_theme.dart';
 import 'package:tasky/Core/Theme/light_theme.dart';
 import 'package:tasky/Core/Theme/themes_controller.dart';
 import 'package:tasky/Core/constants/storage_key.dart';
+import 'package:tasky/Features/navigaton/main_screen.dart';
 import 'package:tasky/Features/tasks/controller/tasks_controller.dart';
 import 'package:tasky/Features/welcome/welcome_screen.dart';
 
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
                 theme: lightTheme,
                 darkTheme: darkTheme,
                 themeMode: themeMode,
-                home: username == null ? WelcomeScreen() : WelcomeScreen(),
+                home: username == null ? WelcomeScreen() : MainScreen(),
               );
             },
           ),

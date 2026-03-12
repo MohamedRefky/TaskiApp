@@ -49,16 +49,21 @@ ThemeData darkTheme = ThemeData(
     }),
   ),
   textButtonTheme: TextButtonThemeData(
-    style: ButtonStyle(
-      foregroundColor: WidgetStateProperty.all(Color(0xFFFFFCFC)),
+    style: TextButton.styleFrom(
+      foregroundColor: Color(0xFFFFFCFC),
     ),
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
-    style: ButtonStyle(
-      backgroundColor: WidgetStateProperty.all(Color(0xFF15B86C)),
-      foregroundColor: WidgetStateProperty.all(Color(0xFFFFFCFC)),
-      textStyle: WidgetStateProperty.all(
-        TextStyle(fontSize: AppSizes.sp16, fontWeight: FontWeight.w500),
+    style: ElevatedButton.styleFrom(
+      minimumSize: Size.fromHeight(AppSizes.h40),
+      backgroundColor: Color(0xFF15B86C),
+      foregroundColor: Color(0xFFFFFCFC),
+      textStyle: TextStyle(
+        fontSize: AppSizes.sp16,
+        fontWeight: FontWeight.w500,
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSizes.r30),
       ),
     ),
   ),

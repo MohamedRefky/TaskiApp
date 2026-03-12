@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:tasky/Core/Services/prefrances_maneger.dart';
 import 'package:tasky/Core/Theme/themes_controller.dart';
 import 'package:tasky/Core/Widgets/custom_svg_picture.dart';
+import 'package:tasky/Core/constants/app_sizes.dart';
 import 'package:tasky/Core/constants/storage_key.dart';
 import 'package:tasky/Features/navigaton/main_screen.dart';
 import 'package:tasky/Features/profile/user_details_screen.dart';
@@ -57,14 +58,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ? Center(child: CircularProgressIndicator(color: Color(0xFFFFFCFC)))
           : Center(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: EdgeInsets.symmetric(horizontal: AppSizes.w16),
                 child: Column(
                   children: [
                     Stack(
                       alignment: Alignment.bottomRight,
                       children: [
                         CircleAvatar(
-                          radius: 70,
+                          radius: AppSizes.r60,
                           backgroundImage: userImagePath == null
                               ? AssetImage("assets/images/person.png")
                               : FileImage(File(userImagePath!)),
@@ -80,10 +81,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             });
                           },
                           child: Container(
-                            height: 40,
-                            width: 40,
+                            height: AppSizes.h40,
+                            width: AppSizes.w40,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
+                              borderRadius: BorderRadius.circular(
+                                AppSizes.r100,
+                              ),
                               color: ColorScheme.of(context).primaryContainer,
                             ),
                             child: Icon(Icons.photo_camera_outlined),
@@ -91,14 +94,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 6),
+                    SizedBox(height: AppSizes.h6),
                     Text(usarName, style: TextTheme.of(context).labelSmall),
-                    SizedBox(height: 4),
+                    SizedBox(height: AppSizes.h4),
                     Text(
                       motivationQuote ?? "One task at a time. One step closer.",
                       style: TextTheme.of(context).titleSmall,
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: AppSizes.h20),
                     Column(
                       children: [
                         Row(
@@ -109,7 +112,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 20),
+                        SizedBox(height: AppSizes.h20),
                         ListTile(
                           onTap: () async {
                             final resalt = await Navigator.push(
@@ -209,7 +212,7 @@ void showImageSorceDialog(BuildContext context, Function(XFile) selectedFile) {
             child: Row(
               children: [
                 Icon(Icons.camera_alt_outlined),
-                SizedBox(width: 10),
+                SizedBox(width: AppSizes.w10),
                 Text('Camera'),
               ],
             ),
@@ -227,7 +230,7 @@ void showImageSorceDialog(BuildContext context, Function(XFile) selectedFile) {
             child: Row(
               children: [
                 Icon(Icons.photo_library_outlined),
-                SizedBox(width: 10),
+                SizedBox(width: AppSizes.w10),
                 Text('Gallery'),
               ],
             ),

@@ -9,10 +9,6 @@ class CustomElevatedButton extends StatelessWidget {
     return ElevatedButton.icon(
       label: text,
       icon: Icon(Icons.add),
-      style: ElevatedButton.styleFrom(
-        fixedSize: Size(MediaQuery.of(context).size.width, 40),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-      ),
       onPressed: () {},
     );
   }
