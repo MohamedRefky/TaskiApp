@@ -10,12 +10,14 @@ import 'package:tasky/Features/navigaton/main_screen.dart';
 import 'package:tasky/Features/tasks/controller/tasks_controller.dart';
 import 'package:tasky/Features/welcome/welcome_screen.dart';
 
+import 'Core/Services/file_storage_manager.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ScreenUtil.ensureScreenSize();
   await PrefrancesManeger().init();
   ThemesController().init();
-
+  await FileStorageManager().init();
   String? username = PrefrancesManeger().getString(StorageKey.username);
 
   runApp(MyApp(username: username));
@@ -38,7 +40,7 @@ class MyApp extends StatelessWidget {
             minTextAdapt: true,
             builder: (context, _) {
               return MaterialApp(
-                title: 'Tasky App',
+                title: 'Tasky App',              
                 debugShowCheckedModeBanner: false,
                 theme: lightTheme,
                 darkTheme: darkTheme,

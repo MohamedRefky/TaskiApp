@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
-import 'package:tasky/Core/Services/prefrances_maneger.dart';
-import 'package:tasky/core/constants/storage_key.dart';
+import 'package:tasky/Core/Services/file_storage_manager.dart';
 import 'package:tasky/model/task_model.dart';
 
 class TasksController extends ChangeNotifier {
@@ -21,28 +18,23 @@ class TasksController extends ChangeNotifier {
     _loadTasks();
   }
 
-  void _loadTasks() {
+  void _loadTasks() async {
     isLoading = true;
 
-    final finalTask = PrefrancesManeger().getString(StorageKey.tasks);
-    if (finalTask != null) {
-      final taskAfterDecode = jsonDecode(finalTask) as List<dynamic>;
+    final tasksData = await FileStorageManager().lodeTask();
 
-      tasks = taskAfterDecode
-          .map((element) => TaskModel.fromJson(element))
-          .toList();
+    tasks = (tasksData).map((element) => TaskModel.fromJson(element)).toList();
 
-      _loadData();
+    _loadData();
 
-      _calculatePercent();
-    }
+    _calculatePercent();
 
     isLoading = false;
 
     notifyListeners();
   }
 
-  void _loadData() {
+  void _loadData() async {
     todoTasks = tasks.where((element) => !element.isDone).toList();
     completeTasks = tasks.where((element) => element.isDone).toList();
     highPriorityTasks = tasks
@@ -59,7 +51,7 @@ class TasksController extends ChangeNotifier {
     _calculatePercent();
 
     final updatedTask = tasks.map((element) => element.toJson()).toList();
-    PrefrancesManeger().setString(StorageKey.tasks, jsonEncode(updatedTask));
+    FileStorageManager().saveTasks(updatedTask);
 
     notifyListeners();
   }
@@ -73,7 +65,7 @@ class TasksController extends ChangeNotifier {
     _calculatePercent();
 
     final updatedTask = tasks.map((element) => element.toJson()).toList();
-    PrefrancesManeger().setString(StorageKey.tasks, jsonEncode(updatedTask));
+    FileStorageManager().saveTasks(updatedTask);
 
     notifyListeners();
   }
@@ -82,5 +74,9 @@ class TasksController extends ChangeNotifier {
     totalTask = tasks.length;
     totalDoneTasks = tasks.where((e) => e.isDone).length;
     percent = totalTask == 0 ? 0 : totalDoneTasks / totalTask;
+  }
+
+  clearTask() {
+    _loadTasks();
   }
 }

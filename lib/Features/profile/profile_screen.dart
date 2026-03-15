@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:tasky/Core/Services/file_storage_manager.dart';
 import 'package:tasky/Core/Services/prefrances_maneger.dart';
 import 'package:tasky/Core/Theme/themes_controller.dart';
 import 'package:tasky/Core/Widgets/custom_svg_picture.dart';
@@ -10,6 +12,7 @@ import 'package:tasky/Core/constants/app_sizes.dart';
 import 'package:tasky/Core/constants/storage_key.dart';
 import 'package:tasky/Features/navigaton/main_screen.dart';
 import 'package:tasky/Features/profile/user_details_screen.dart';
+import 'package:tasky/Features/tasks/controller/tasks_controller.dart';
 import 'package:tasky/Features/welcome/welcome_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -164,7 +167,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             PrefrancesManeger().remove(
                               StorageKey.motivationQuote,
                             );
-                            PrefrancesManeger().remove(StorageKey.tasks);
+                        
+                           await FileStorageManager().clear();
+                           context.read<TasksController>().clearTask();
+
                             Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(

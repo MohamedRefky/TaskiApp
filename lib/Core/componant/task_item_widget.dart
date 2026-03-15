@@ -1,12 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:tasky/Core/Services/prefrances_maneger.dart';
+import 'package:tasky/Core/Services/file_storage_manager.dart';
 import 'package:tasky/Core/Theme/themes_controller.dart';
 import 'package:tasky/Core/Widgets/custom_checkbox.dart';
 import 'package:tasky/Core/Widgets/custom_text_form_field.dart';
 import 'package:tasky/Core/constants/app_sizes.dart';
-import 'package:tasky/Core/constants/storage_key.dart';
 import 'package:tasky/Core/enums/task_item_action_enums.dart';
 import 'package:tasky/model/task_model.dart';
 
@@ -139,7 +136,10 @@ class TaskItemWidget extends StatelessWidget {
       builder: (context) => StatefulBuilder(
         builder: (context, setState) {
           return Padding(
-            padding:  EdgeInsets.symmetric(horizontal: AppSizes.w16, vertical: AppSizes.h8),
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSizes.w16,
+              vertical: AppSizes.h8,
+            ),
             child: Form(
               key: key,
               child: Column(
@@ -188,20 +188,19 @@ class TaskItemWidget extends StatelessWidget {
                     label: Text('ُEdit Task'),
                     icon: Icon(Icons.edit),
                     style: ElevatedButton.styleFrom(
-                      fixedSize: Size(MediaQuery.of(context).size.width, AppSizes.h40),
+                      fixedSize: Size(
+                        MediaQuery.of(context).size.width,
+                        AppSizes.h40,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(AppSizes.r30),
                       ),
                     ),
                     onPressed: () async {
                       if (key.currentState?.validate() ?? false) {
-                        final taskJson = PrefrancesManeger().getString(
-                          StorageKey.tasks,
-                        );
-                        List<dynamic> taskList = [];
-                        if (taskJson != null) {
-                          taskList = jsonDecode(taskJson);
-                        }
+                        List<dynamic> taskList = await FileStorageManager()
+                            .lodeTask();
+
                         TaskModel newModel = TaskModel(
                           id: model.id,
                           taskName: taskNameController.text,
@@ -213,11 +212,7 @@ class TaskItemWidget extends StatelessWidget {
                         taskList
                             .firstWhere((e) => e['id'] == model.id)
                             .updateAll((key, value) => newModel.toJson()[key]);
-                        await PrefrancesManeger().setString(
-                          StorageKey.tasks,
-                          jsonEncode(taskList),
-                        );
-
+                        await FileStorageManager().saveTasks(taskList);
                         Navigator.pop(context, true);
                       }
                     },
