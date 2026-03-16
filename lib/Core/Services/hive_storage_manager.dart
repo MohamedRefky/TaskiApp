@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:hive_ce_flutter/adapters.dart';
@@ -10,7 +9,6 @@ class HiveStorageManager {
   static final HiveStorageManager _instance = HiveStorageManager._();
   factory HiveStorageManager() => _instance;
   late final Directory appDocumentsDirectory;
-
 
   late Box<TaskModel> _taskBox;
 
@@ -25,12 +23,11 @@ class HiveStorageManager {
     await _taskBox.addAll(list);
   }
 
-  List <TaskModel> lodeTask()  {
-  return _taskBox.values.toList();
+  List<TaskModel> lodeTask() {
+    return _taskBox.values.toList();
   }
 
   clear() async {
     await _taskBox.clear();
-  
   }
 }
