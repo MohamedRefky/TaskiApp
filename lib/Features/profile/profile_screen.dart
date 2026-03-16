@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:tasky/Core/Services/file_storage_manager.dart';
+import 'package:tasky/Core/Services/hive_storage_manager.dart';
 import 'package:tasky/Core/Services/prefrances_maneger.dart';
 import 'package:tasky/Core/Theme/themes_controller.dart';
 import 'package:tasky/Core/Widgets/custom_svg_picture.dart';
@@ -167,9 +167,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             PrefrancesManeger().remove(
                               StorageKey.motivationQuote,
                             );
-                        
-                           await FileStorageManager().clear();
-                           context.read<TasksController>().clearTask();
+
+                            await HiveStorageManager().clear();
+                            context.read<TasksController>().clearTask();
 
                             Navigator.pushAndRemoveUntil(
                               context,

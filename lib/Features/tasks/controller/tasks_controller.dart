@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:tasky/Core/Services/file_storage_manager.dart';
+import 'package:tasky/Core/Services/hive_storage_manager.dart';
 import 'package:tasky/model/task_model.dart';
 
 class TasksController extends ChangeNotifier {
@@ -21,9 +21,7 @@ class TasksController extends ChangeNotifier {
   void _loadTasks() async {
     isLoading = true;
 
-    final tasksData = await FileStorageManager().lodeTask();
-
-    tasks = (tasksData).map((element) => TaskModel.fromJson(element)).toList();
+    tasks = HiveStorageManager().lodeTask();
 
     _loadData();
 
@@ -50,8 +48,7 @@ class TasksController extends ChangeNotifier {
     _loadData();
     _calculatePercent();
 
-    final updatedTask = tasks.map((element) => element.toJson()).toList();
-    FileStorageManager().saveTasks(updatedTask);
+    HiveStorageManager().saveTasks(tasks);
 
     notifyListeners();
   }
@@ -64,8 +61,7 @@ class TasksController extends ChangeNotifier {
     _loadData();
     _calculatePercent();
 
-    final updatedTask = tasks.map((element) => element.toJson()).toList();
-    FileStorageManager().saveTasks(updatedTask);
+    HiveStorageManager().saveTasks(tasks);
 
     notifyListeners();
   }

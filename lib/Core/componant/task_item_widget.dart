@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tasky/Core/Services/file_storage_manager.dart';
+import 'package:tasky/Core/Services/hive_storage_manager.dart';
 import 'package:tasky/Core/Theme/themes_controller.dart';
 import 'package:tasky/Core/Widgets/custom_checkbox.dart';
 import 'package:tasky/Core/Widgets/custom_text_form_field.dart';
@@ -198,9 +198,8 @@ class TaskItemWidget extends StatelessWidget {
                     ),
                     onPressed: () async {
                       if (key.currentState?.validate() ?? false) {
-                        List<dynamic> taskList = await FileStorageManager()
+                        List<TaskModel> taskList = HiveStorageManager()
                             .lodeTask();
-
                         TaskModel newModel = TaskModel(
                           id: model.id,
                           taskName: taskNameController.text,
@@ -209,10 +208,12 @@ class TaskItemWidget extends StatelessWidget {
                           isDone: model.isDone,
                         );
 
-                        taskList
-                            .firstWhere((e) => e['id'] == model.id)
-                            .updateAll((key, value) => newModel.toJson()[key]);
-                        await FileStorageManager().saveTasks(taskList);
+                        final item = taskList.firstWhere(
+                          (e) => e.id == model.id,
+                        );
+                        final int index = taskList.indexOf(item);
+                        taskList[index] = newModel;
+                        await HiveStorageManager().saveTasks(taskList);
                         Navigator.pop(context, true);
                       }
                     },
