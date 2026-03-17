@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:tasky/Core/Services/prefrances_maneger.dart';
-import 'package:tasky/Core/constants/storage_key.dart';
+import 'package:tasky/Core/Services/hive_storage_manager.dart';
 import 'package:tasky/model/task_model.dart';
 
 class AddTaskController with ChangeNotifier {
@@ -16,11 +13,7 @@ class AddTaskController with ChangeNotifier {
   bool isHighPriority = true;
   void addTask(BuildContext context) async {
     if (key.currentState?.validate() ?? false) {
-      final taskJson = PrefrancesManeger().getString(StorageKey.tasks);
-      List<dynamic> taskList = [];
-      if (taskJson != null) {
-        taskList = jsonDecode(taskJson);
-      }
+      List<TaskModel> taskList =  HiveStorageManager().lodeTask();
       TaskModel model = TaskModel(
         id: taskList.length + 1,
         taskName: taskNameController.text,
@@ -28,11 +21,8 @@ class AddTaskController with ChangeNotifier {
         isHighPriority: isHighPriority,
       );
 
-      taskList.add(model.toMap());
-      await PrefrancesManeger().setString(
-        StorageKey.tasks,
-        jsonEncode(taskList),
-      );
+      taskList.add(model);
+      await HiveStorageManager().saveTasks(taskList);
       Navigator.of(context).pop(true);
     }
     notifyListeners();

@@ -1,11 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:tasky/Core/Services/prefrances_maneger.dart';
+import 'package:tasky/Core/Services/hive_storage_manager.dart';
 import 'package:tasky/Core/Theme/themes_controller.dart';
 import 'package:tasky/Core/Widgets/custom_checkbox.dart';
 import 'package:tasky/Core/Widgets/custom_text_form_field.dart';
-import 'package:tasky/Core/constants/storage_key.dart';
+import 'package:tasky/Core/constants/app_sizes.dart';
 import 'package:tasky/Core/enums/task_item_action_enums.dart';
 import 'package:tasky/model/task_model.dart';
 
@@ -24,12 +22,12 @@ class TaskItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 56,
+      height: AppSizes.h56,
       alignment: Alignment.center,
       width: double.infinity,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primaryContainer,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppSizes.r20),
         border: Border.all(
           color: ThemesController.isDark()
               ? Colors.transparent
@@ -39,7 +37,7 @@ class TaskItemWidget extends StatelessWidget {
       child: Row(
         children: [
           CustomCheckbox(value: model.isDone, onChanged: onChanged),
-          SizedBox(height: 16),
+          SizedBox(height: AppSizes.h16),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -114,7 +112,7 @@ class TaskItemWidget extends StatelessWidget {
           TextButton(
             style: TextButton.styleFrom(foregroundColor: Colors.red),
             onPressed: () {
-              onDelete(model.id!);
+              onDelete(model.id);
               Navigator.of(context).pop();
             },
             child: Text('Delete'),
@@ -138,7 +136,10 @@ class TaskItemWidget extends StatelessWidget {
       builder: (context) => StatefulBuilder(
         builder: (context, setState) {
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSizes.w16,
+              vertical: AppSizes.h8,
+            ),
             child: Form(
               key: key,
               child: Column(
@@ -156,7 +157,7 @@ class TaskItemWidget extends StatelessWidget {
                       }
                     },
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: AppSizes.h20),
                   CustomTextFormfield(
                     title: "Task Description",
                     maxLines: 5,
@@ -164,7 +165,7 @@ class TaskItemWidget extends StatelessWidget {
                     hintText:
                         "Finish onboarding UI and hand off to devs by Thursday.",
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: AppSizes.h20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -187,20 +188,18 @@ class TaskItemWidget extends StatelessWidget {
                     label: Text('ُEdit Task'),
                     icon: Icon(Icons.edit),
                     style: ElevatedButton.styleFrom(
-                      fixedSize: Size(MediaQuery.of(context).size.width, 40),
+                      fixedSize: Size(
+                        MediaQuery.of(context).size.width,
+                        AppSizes.h40,
+                      ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(AppSizes.r30),
                       ),
                     ),
                     onPressed: () async {
                       if (key.currentState?.validate() ?? false) {
-                        final taskJson = PrefrancesManeger().getString(
-                          StorageKey.tasks,
-                        );
-                        List<dynamic> taskList = [];
-                        if (taskJson != null) {
-                          taskList = jsonDecode(taskJson);
-                        }
+                        List<TaskModel> taskList = HiveStorageManager()
+                            .lodeTask();
                         TaskModel newModel = TaskModel(
                           id: model.id,
                           taskName: taskNameController.text,
@@ -209,14 +208,12 @@ class TaskItemWidget extends StatelessWidget {
                           isDone: model.isDone,
                         );
 
-                        taskList
-                            .firstWhere((e) => e['id'] == model.id)
-                            .updateAll((key, value) => newModel.toMap()[key]);
-                        await PrefrancesManeger().setString(
-                          StorageKey.tasks,
-                          jsonEncode(taskList),
+                        final item = taskList.firstWhere(
+                          (e) => e.id == model.id,
                         );
-
+                        final int index = taskList.indexOf(item);
+                        taskList[index] = newModel;
+                        await HiveStorageManager().saveTasks(taskList);
                         Navigator.pop(context, true);
                       }
                     },

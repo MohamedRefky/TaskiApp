@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
-import 'package:tasky/Core/Services/prefrances_maneger.dart';
-import 'package:tasky/core/constants/storage_key.dart';
+import 'package:tasky/Core/Services/hive_storage_manager.dart';
 import 'package:tasky/model/task_model.dart';
 
 class TasksController extends ChangeNotifier {
@@ -11,105 +8,71 @@ class TasksController extends ChangeNotifier {
   List<TaskModel> tasks = [];
   List<TaskModel> completeTasks = [];
   List<TaskModel> todoTasks = [];
-  List<TaskModel> highPriorityTask = [];
+  List<TaskModel> highPriorityTasks = [];
+
+  int totalTask = 0;
+  int totalDoneTasks = 0;
+  double percent = 0;
 
   init() {
     _loadTasks();
   }
 
-  void _loadTasks() {
+  void _loadTasks() async {
     isLoading = true;
 
-    final finalTask = PrefrancesManeger().getString(StorageKey.tasks);
-    if (finalTask != null) {
-      final taskAfterDecode = jsonDecode(finalTask) as List<dynamic>;
+    tasks = HiveStorageManager().lodeTask();
 
-      tasks = taskAfterDecode
-          .map((element) => TaskModel.fromjeson(element))
-          .toList();
-      todoTasks = tasks.where((element) => !element.isDone).toList();
-      completeTasks = tasks.where((element) => element.isDone).toList();
+    _loadData();
 
-      highPriorityTask = tasks
-          .where((element) => element.isHighPriority)
-          .toList()
-          .reversed
-          .toList();
-    }
+    _calculatePercent();
 
     isLoading = false;
-    notifyListeners();
-  }
-
-  void doneTask(bool? value, int? index) async {
-    if (index == null || index >= todoTasks.length) return;
-
-    TaskModel task = todoTasks[index];
-    task.isDone = value ?? false;
-    final int mainIndex = tasks.indexWhere((e) => e.id == task.id);
-    if (mainIndex != -1) tasks[mainIndex] = task;
-    await PrefrancesManeger().setString(
-      StorageKey.tasks,
-      jsonEncode(tasks.map((e) => e.toMap()).toList()),
-    );
-    todoTasks = tasks.where((e) => !e.isDone).toList();
-    completeTasks = tasks.where((e) => e.isDone).toList();
 
     notifyListeners();
   }
 
-  void doneCompleteTask(bool? value, int? index) async {
-    if (index == null || index >= completeTasks.length) return;
+  void _loadData() async {
+    todoTasks = tasks.where((element) => !element.isDone).toList();
+    completeTasks = tasks.where((element) => element.isDone).toList();
+    highPriorityTasks = tasks
+        .where((element) => element.isHighPriority)
+        .toList();
+    highPriorityTasks = highPriorityTasks.reversed.toList();
+  }
 
-    TaskModel task = completeTasks[index];
-    task.isDone = value ?? false;
+  void doneTask(bool? value, int id) async {
+    final index = tasks.indexWhere((e) => e.id == id);
+    tasks[index].isDone = value ?? false;
 
-    final int mainIndex = tasks.indexWhere((e) => e.id == task.id);
-    if (mainIndex != -1) tasks[mainIndex] = task;
+    _loadData();
+    _calculatePercent();
 
-    await PrefrancesManeger().setString(
-      StorageKey.tasks,
-      jsonEncode(tasks.map((e) => e.toMap()).toList()),
-    );
-
-    todoTasks = tasks.where((e) => !e.isDone).toList();
-    completeTasks = tasks.where((e) => e.isDone).toList();
+    HiveStorageManager().saveTasks(tasks);
 
     notifyListeners();
   }
-  void doneHighPriorityTask(bool? value, int? index) async {
-    if (index == null) return;
 
-    TaskModel task = highPriorityTask[index];
-    task.isDone = value ?? false;
-
-    final int mainIndex = tasks.indexWhere((e) => e.id == task.id);
-    if (mainIndex != -1) tasks[mainIndex] = task;
-
-    await PrefrancesManeger().setString(
-      StorageKey.tasks,
-      jsonEncode(tasks.map((e) => e.toMap()).toList()),
-    );
-
-    todoTasks = tasks.where((e) => !e.isDone).toList();
-    highPriorityTask = tasks.where((e) => e.isDone).toList();
-
-    notifyListeners();
-  }
   deleteTask(int? id) async {
     if (id == null) return;
 
     tasks.removeWhere((e) => e.id == id);
-    todoTasks.removeWhere((tasks) => tasks.id == id);
-    completeTasks.removeWhere((tasks) => tasks.id == id);
-    highPriorityTask.removeWhere((tasks) => tasks.id == id);
 
-    final updatedTask = tasks.map((e) => e.toMap()).toList();
-    await PrefrancesManeger().setString(
-      StorageKey.tasks,
-      jsonEncode(updatedTask),
-    );
+    _loadData();
+    _calculatePercent();
+
+    HiveStorageManager().saveTasks(tasks);
 
     notifyListeners();
+  }
+
+  _calculatePercent() {
+    totalTask = tasks.length;
+    totalDoneTasks = tasks.where((e) => e.isDone).length;
+    percent = totalTask == 0 ? 0 : totalDoneTasks / totalTask;
+  }
+
+  clearTask() {
+    _loadTasks();
   }
 }

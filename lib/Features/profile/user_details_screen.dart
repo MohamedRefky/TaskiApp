@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tasky/Core/Services/prefrances_maneger.dart';
 import 'package:tasky/Core/Widgets/custom_text_form_field.dart';
+import 'package:tasky/Core/constants/app_sizes.dart';
 import 'package:tasky/Core/constants/storage_key.dart';
 
 class UserDetailsScreen extends StatefulWidget {
@@ -38,11 +39,14 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
       appBar: AppBar(
         title: Text(
           "User Details",
-          style: TextStyle(color: Color(0xFFFFFCFC), fontSize: 20),
+          style: TextStyle(color: Color(0xFFFFFCFC), fontSize: AppSizes.sp20),
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSizes.w16,
+          vertical: AppSizes.h8,
+        ),
         child: Form(
           key: _key,
           child: Column(
@@ -74,13 +78,10 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
               ),
               Spacer(),
               ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  fixedSize: Size(MediaQuery.of(context).size.width, 40),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
+                child: Text(
+                  "Save Changes",
+                  style: TextStyle(fontSize: AppSizes.sp14),
                 ),
-                child: Text("Save Changes", style: TextStyle(fontSize: 14)),
                 onPressed: () async {
                   if (_key.currentState!.validate()) {
                     await PrefrancesManeger().setString(

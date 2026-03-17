@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tasky/Core/Services/prefrances_maneger.dart';
 import 'package:tasky/Core/Widgets/custom_svg_picture.dart';
 import 'package:tasky/Core/Widgets/custom_text_form_field.dart';
+import 'package:tasky/Core/constants/app_sizes.dart';
 import 'package:tasky/Core/constants/storage_key.dart';
 import 'package:tasky/Features/navigaton/main_screen.dart';
 
@@ -23,20 +24,20 @@ class WelcomeScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 8),
+                  SizedBox(height: AppSizes.h8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CustomSvgPicture.whithColorFilter(
                         path: 'assets/images/logo.svg',
-                        height: 42,
-                        width: 42,
+                        height: AppSizes.h42,
+                        width: AppSizes.w42,
                       ),
-                      SizedBox(width: 16),
+                      SizedBox(width: AppSizes.w16),
                       Text('Tasky', style: TextTheme.of(context).displayMedium),
                     ],
                   ),
-                  SizedBox(height: 118),
+                  SizedBox(height: AppSizes.h100),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -44,30 +45,32 @@ class WelcomeScreen extends StatelessWidget {
                         'Welcome To Tasky ',
                         style: Theme.of(context).textTheme.displaySmall,
                       ),
-                      SizedBox(width: 8),
+                      SizedBox(width: AppSizes.w8),
                       CustomSvgPicture.whithColorFilter(
                         path: 'assets/images/waving-hand.svg',
-                        height: 28,
-                        width: 28,
+                        height: AppSizes.h28,
+                        width: AppSizes.w28,
                       ),
                     ],
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(height: AppSizes.h8),
                   Text(
                     'Your productivity journey starts here.',
                     style: Theme.of(
                       context,
-                    ).textTheme.displaySmall!.copyWith(fontSize: 16),
+                    ).textTheme.displaySmall!.copyWith(fontSize: AppSizes.sp16),
                   ),
-                  SizedBox(height: 24),
+                  SizedBox(height: AppSizes.h24),
                   CustomSvgPicture.whithColorFilter(
                     path: 'assets/images/pana.svg',
-                    height: 215,
-                    width: 215,
+                    height: AppSizes.h215,
+                    width: AppSizes.w215,
                   ),
-                  SizedBox(height: 28),
+                  SizedBox(height: AppSizes.h28),
                   Padding(
-                    padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
+                    padding: EdgeInsetsGeometry.symmetric(
+                      horizontal: AppSizes.w16,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -82,19 +85,8 @@ class WelcomeScreen extends StatelessWidget {
                             return null;
                           },
                         ),
-                        SizedBox(height: 24),
+                        SizedBox(height: AppSizes.h24),
                         ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            textStyle: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            padding: EdgeInsets.fromLTRB(24, 10, 24, 10),
-                            fixedSize: Size(
-                              MediaQuery.of(context).size.width,
-                              40,
-                            ),
-                          ),
                           onPressed: () async {
                             if (_key.currentState?.validate() ?? false) {
                               await PrefrancesManeger().setString(
@@ -110,11 +102,11 @@ class WelcomeScreen extends StatelessWidget {
                                 ),
                               );
                             } else {
-                              //   ScaffoldMessenger.of(context).showSnackBar(
-                              //     SnackBar(
-                              //       content: Text('Please enter your full name'),
-                              //     ),
-                              //   );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Please Enter Your Full Name"),
+                                ),
+                              );
                             }
                           },
                           child: Text('Let\'s Get Started'),

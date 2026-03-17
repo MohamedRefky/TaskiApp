@@ -3,7 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:tasky/Core/Theme/themes_controller.dart';
 import 'package:tasky/Core/Widgets/custom_checkbox.dart';
 import 'package:tasky/Core/Widgets/custom_svg_picture.dart';
-import 'package:tasky/Features/home/home_controller.dart';
+import 'package:tasky/Core/constants/app_sizes.dart';
+import 'package:tasky/Features/tasks/controller/tasks_controller.dart';
 import 'package:tasky/Features/tasks/high_priority_screen.dart';
 import 'package:tasky/model/task_model.dart';
 
@@ -20,15 +21,19 @@ class _HighPriorityTasksState extends State<HighPriorityTasks> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Consumer<HomeController>(
+        Consumer<TasksController>(
           builder:
-              (BuildContext context, HomeController controller, Widget? child) {
+              (
+                BuildContext context,
+                TasksController controller,
+                Widget? child,
+              ) {
                 final tasksList = controller.tasks;
 
                 return Container(
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(AppSizes.r20),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -39,12 +44,12 @@ class _HighPriorityTasksState extends State<HighPriorityTasks> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.all(16.0),
+                              padding: EdgeInsets.all(AppSizes.r16),
                               child: Text(
                                 'High Priority Tasks',
                                 style: TextStyle(
                                   color: Color(0xFF15B86C),
-                                  fontSize: 14,
+                                  fontSize: AppSizes.sp14,
                                 ),
                               ),
                             ),
@@ -69,10 +74,7 @@ class _HighPriorityTasksState extends State<HighPriorityTasks> {
                                     CustomCheckbox(
                                       value: task.isDone,
                                       onChanged: (bool? value) {
-                                        final index = tasksList.indexWhere(
-                                          (e) => e.id == task.id,
-                                        );
-                                        controller.doneTask(value, index);
+                                        controller.doneTask(value, task.id);
                                       },
                                     ),
                                     Flexible(
@@ -105,14 +107,14 @@ class _HighPriorityTasksState extends State<HighPriorityTasks> {
                               },
                             ),
                           );
-                          controller.loadTask();
+                          controller.init();
                         },
                         child: Padding(
-                          padding: const EdgeInsets.all(16.0),
+                          padding: EdgeInsets.all(AppSizes.r16),
                           child: Container(
-                            height: 56,
-                            width: 48,
-                            padding: EdgeInsets.all(8),
+                            height: AppSizes.h56,
+                            width: AppSizes.w48,
+                            padding: EdgeInsets.all(AppSizes.r8),
                             decoration: BoxDecoration(
                               color: Theme.of(
                                 context,
@@ -126,8 +128,8 @@ class _HighPriorityTasksState extends State<HighPriorityTasks> {
                             ),
                             child: CustomSvgPicture(
                               path: "assets/images/arrow-up-right.svg",
-                              height: 24,
-                              width: 24,
+                              height: AppSizes.h24,
+                              width: AppSizes.w24,
                             ),
                           ),
                         ),

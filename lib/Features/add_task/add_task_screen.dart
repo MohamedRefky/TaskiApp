@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tasky/Core/Widgets/custom_text_form_field.dart';
+import 'package:tasky/Core/constants/app_sizes.dart';
 import 'package:tasky/Features/add_task/add_task_controller.dart';
 
 class AddTaskScreen extends StatelessWidget {
@@ -15,7 +16,7 @@ class AddTaskScreen extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(title: Text('Add New Task')),
           body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+             padding:  EdgeInsets.symmetric(horizontal: AppSizes.w16, vertical: AppSizes.h8),
             child: Form(
               key: controller.key,
               child: Column(
@@ -33,7 +34,7 @@ class AddTaskScreen extends StatelessWidget {
                       }
                     },
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: AppSizes.h20),
                   CustomTextFormfield(
                     title: "Task Description",
                     maxLines: 5,
@@ -41,7 +42,7 @@ class AddTaskScreen extends StatelessWidget {
                     hintText:
                         "Finish onboarding UI and hand off to devs by Thursday.",
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: AppSizes.h20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -63,16 +64,11 @@ class AddTaskScreen extends StatelessWidget {
                   ElevatedButton.icon(
                     label: Text('Add Task'),
                     icon: Icon(Icons.add),
-                    style: ElevatedButton.styleFrom(
-                      fixedSize: Size(MediaQuery.of(context).size.width, 40),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                    ),
                     onPressed: () async {
                       context.read<AddTaskController>().addTask(context);
                     },
                   ),
+                  SizedBox(height: AppSizes.h16),
                 ],
               ),
             ),

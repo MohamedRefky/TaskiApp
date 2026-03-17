@@ -3,11 +3,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:tasky/Core/constants/app_sizes.dart';
 import 'package:tasky/Features/add_task/add_task_screen.dart';
 import 'package:tasky/Features/home/componant/achieved_tasks_widget.dart';
 import 'package:tasky/Features/home/componant/high_priority_tasks_widget.dart';
 import 'package:tasky/Features/home/componant/sliver_task_list_widget.dart';
 import 'package:tasky/Features/home/home_controller.dart';
+import 'package:tasky/Features/tasks/controller/tasks_controller.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -19,7 +21,7 @@ class HomeScreen extends StatelessWidget {
         return Scaffold(
           body: SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(AppSizes.r16),
               child: CustomScrollView(
                 slivers: [
                   SliverToBoxAdapter(
@@ -33,14 +35,14 @@ class HomeScreen extends StatelessWidget {
                                   controller.userImagePath,
                               builder: (context, String? userImagePath, child) {
                                 return CircleAvatar(
-                                  radius: 24,
+                                  radius: AppSizes.r24,
                                   backgroundImage: userImagePath == null
                                       ? AssetImage('assets/images/person.png')
                                       : FileImage(File(userImagePath)),
                                 );
                               },
                             ),
-                            SizedBox(width: 8),
+                            SizedBox(width: AppSizes.w8),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -66,7 +68,7 @@ class HomeScreen extends StatelessWidget {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: 16),
+                            SizedBox(height: AppSizes.h16),
                             Text(
                               'Yuhuu ,Your work Is Done',
                               style: TextTheme.of(context).displayLarge,
@@ -84,14 +86,14 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: 16),
+                        SizedBox(height: AppSizes.h16),
                         AchievedTasksWidget(),
-                        SizedBox(height: 8),
+                        SizedBox(height: AppSizes.w8),
                         HighPriorityTasks(),
                         Padding(
-                          padding: const EdgeInsets.only(
-                            top: 24.0,
-                            bottom: 16.0,
+                          padding:  EdgeInsets.only(
+                            top: AppSizes.h24,
+                            bottom: AppSizes.h16,
                           ),
                           child: Text(
                             "My Tasks ",
@@ -107,7 +109,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           floatingActionButton: SizedBox(
-            height: 40,
+            height: AppSizes.h44,
             child: Builder(
               builder: (BuildContext context) {
                 return FloatingActionButton.extended(
@@ -118,7 +120,7 @@ class HomeScreen extends StatelessWidget {
                     );
 
                     if (result != null && result) {
-                      context.read<HomeController>().loadTask();
+                      context.read<TasksController>().init();
                     }
                   },
                   label: Text('Add New Task'),

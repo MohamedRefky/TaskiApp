@@ -8,35 +8,29 @@ class HighPriorityScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<TasksController>(
-      create: (_) => TasksController()..init(),
-      builder: (context, _) {
-        final controller = context.read<TasksController>();
-        return Scaffold(
-          appBar: AppBar(title: Text("High Priority Tasks")),
-          body: controller.isLoading
-              ? Center(
-                  child: CircularProgressIndicator(color: Color(0xFFFFFCFC)),
-                )
-              : Consumer<TasksController>(
-                  builder: (BuildContext context, value, Widget? child) {
-                    return TaskListWidget(
-                      tasks: value.highPriorityTask,
-                      onTap: (bool? value, int? index) async {
-                        controller.doneHighPriorityTask(value, index);
-                      },
-                      emptyMessage: 'No Tasks Found',
-                      onDelete: (int? id) {
-                        controller.deleteTask(id);
-                      },
-                      onEdit: () {
-                        controller.init();
-                      },
-                    );
+    final controller = context.read<TasksController>();
+
+    return Scaffold(
+      appBar: AppBar(title: Text("High Priority Tasks")),
+      body: controller.isLoading
+          ? Center(child: CircularProgressIndicator(color: Color(0xFFFFFCFC)))
+          : Consumer<TasksController>(
+              builder: (BuildContext context, valueController, Widget? child) {
+                return TaskListWidget(
+                  tasks: valueController.highPriorityTasks,
+                  onTap: (bool? value, int? index) async {
+                    controller.doneTask(value, valueController.highPriorityTasks[index!].id);
                   },
-                ),
-        );
-      },
+                  emptyMessage: 'No Tasks Found',
+                  onDelete: (int? id) {
+                    controller.deleteTask(id);
+                  },
+                  onEdit: () {
+                    controller.init();
+                  },
+                );
+              },
+            ),
     );
   }
 }

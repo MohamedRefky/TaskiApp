@@ -8,37 +8,30 @@ class CompletedTasksScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (BuildContext context) => TasksController()..init(),
-      builder: (context, _) {
-        final controller = context.read<TasksController>();
-        return Scaffold(
-          appBar: AppBar(title: Text("Completed Tasks")),
-          body: controller.isLoading
-              ? Center(
-                  child: CircularProgressIndicator(color: Color(0xFFFFFCFC)),
-                )
-              : Consumer<TasksController>(
-                  builder: (BuildContext context, value, Widget? child) {
-                    return TaskListWidget(
-                      tasks: value.completeTasks,
-                      onTap: (bool? value, int? index) async {
-                        controller.doneCompleteTask(value, index);
+    final controller = context.read<TasksController>();
+    return Scaffold(
+      appBar: AppBar(title: Text("Completed Tasks")),
+      body: controller.isLoading
+          ? Center(child: CircularProgressIndicator(color: Color(0xFFFFFCFC)))
+          : Consumer<TasksController>(
+              builder: (BuildContext context, valueController, Widget? child) {
+                return TaskListWidget(
+                  tasks: valueController.completeTasks,
+                  onTap: (bool? value, int? index) async {
+                    controller.doneTask(value, valueController.completeTasks[index!].id);
 
-                        controller.init();
-                      },
-                      emptyMessage: 'No Tasks Found',
-                      onDelete: (int? id ) {
-                        controller.deleteTask(id);
-                      },
-                      onEdit: () {
-                        controller.init();
-                      },
-                    );
+                    controller.init();
                   },
-                ),
-        );
-      },
+                  emptyMessage: 'No Tasks Found',
+                  onDelete: (int? id) {
+                    controller.deleteTask(id);
+                  },
+                  onEdit: () {
+                    controller.init();
+                  },
+                );
+              },
+            ),
     );
   }
 }

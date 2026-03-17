@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tasky/Core/componant/task_item_widget.dart';
-import 'package:tasky/Features/home/home_controller.dart';
+import 'package:tasky/Core/constants/app_sizes.dart';
+import 'package:tasky/Features/tasks/controller/tasks_controller.dart';
 
 class SliverTaskListWidget extends StatelessWidget {
-  const SliverTaskListWidget({super.key, });
+  const SliverTaskListWidget({super.key});
   @override
   Widget build(BuildContext context) {
-    return Consumer<HomeController>(
+    return Consumer<TasksController>(
       builder:
-          (BuildContext context, HomeController controller, Widget? child) {
+          (BuildContext context, TasksController controller, Widget? child) {
             final tasksList = controller.tasks;
             return controller.isLoading
                 ? SliverToBoxAdapter(
@@ -23,31 +24,31 @@ class SliverTaskListWidget extends StatelessWidget {
                 ? SliverToBoxAdapter(
                     child: Center(
                       child: Text(
-                         'No Data',
+                        'No Data',
                         style: Theme.of(context).textTheme.displaySmall,
                       ),
                     ),
                   )
                 : SliverPadding(
-                    padding: const EdgeInsets.only(bottom: 60),
+                    padding: EdgeInsets.only(bottom: AppSizes.h60),
                     sliver: SliverList.separated(
                       itemCount: tasksList.length,
                       itemBuilder: (BuildContext context, int index) {
                         return TaskItemWidget(
                           model: tasksList[index],
                           onChanged: (bool? value) {
-                            controller.doneTask(value, index);
+                            controller.doneTask(value, tasksList[index].id);
                           },
                           onDelete: (int id) {
                             controller.deleteTask(id);
                           },
                           onEdit: () {
-                            controller.loadTask();
+                            controller.init();
                           },
                         );
                       },
                       separatorBuilder: (BuildContext context, int index) {
-                        return SizedBox(height: 8);
+                        return SizedBox(height: AppSizes.h8);
                       },
                     ),
                   );
